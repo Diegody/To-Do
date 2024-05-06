@@ -5,10 +5,38 @@
     box-sizing: border-box;
 }
 
+.navbar {
+    background-color: #FF5945;
+    overflow: hidden;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    float: right;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
 .container {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(135deg, #153677, #4e085f);
+    background: rgba(0, 0, 0, 0.9);
     /* background: linear-gradient(135deg, #57eb12, #2905c9); */
     padding: 10px;
 }
@@ -16,14 +44,14 @@
 .todo{
     width: 100%;
     max-width: 540px;
-    background: #FFFF;
+    background: linear-gradient(135deg, #153677, #4e085f);
     margin: 100px auto 20px;
     padding: 40px 30px 70px;
     border-radius: 10px;
 }
 
 .todo h2{
-    color: #002765;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -64,16 +92,17 @@ button{
     border-radius: 40px;
 }
 
-ul li{
+.todo ul li{
     list-style: none;
     font-size: 18px;
     padding: 12px 8px 12px 50px;
     user-select: none;
     cursor: pointer;
     position: relative;
+    color: #FFFFFF;
 }
 
-ul li::before{
+.todo ul li::before{
     content: '';
     position: absolute;
     height: 28px;
@@ -84,25 +113,26 @@ ul li::before{
     background-position: center;
     top: 12px;
     left: 8px;
+    color: #FFFFFF;
 }
 
-ul li.checked{
-    color: #555;
+.todo ul li.checked{
+    color: #FFFFFF;
     text-decoration: line-through;
 }
 
-ul li.checked::before{
+.todo ul li.checked::before{
     background-image: url(images/checkrojo.png);
 }
 
-ul li span{
+.todo ul li span{
     position: absolute;
     right: 0;
     top: 5px;
     width: 40px;
     height: 40px;
     font-size: 22px;
-    color: #555;
+    color: #FFFFFF;
     line-height: 40px;
     text-align: center;
     border-radius: 50%;
