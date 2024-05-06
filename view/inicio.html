@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/inicio.css">
+    <title>To-Do</title>
+</head>
+<body>
+    <div class="container">
+        <div class="todo">
+            <center><h2>Lista de Tareas<img src="styles/images/to-do list.png"></h2></center>
+            <div class="row">
+                <input type="text" id="input-box" placeholder="Ingresa una Tarea">
+                <button onclick="AddTask()">Añadir</button>
+            </div>
+            <ul id="list-container">
+                <!-- <li class="checked">Tarea 1</li>
+                <li>Tarea 2</li>
+                <li>Tarea 3</li> -->
+            </ul>
+        </div>
+    </div>
+    <script src="../model/logic.js"></script>
+</body>
+</html>
