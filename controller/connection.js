@@ -1,32 +1,31 @@
-let mysql = require("mysql");
+import mysql from 'mysql';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-let connection = mysql.createConnection({
-    host: "localhost",
-    database: "task",
-    user: "root",
-    password: "",
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../env/.env') });
+
+// console.log('DB_HOST:', process.env.DB_HOST);
+// console.log('DB_USER:', process.env.DB_USER);
+// console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
+// console.log('DB_DATABASE:', process.env.DB_DATABASE);
+
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
 });
 
-connection.connect(function(error){
-    if(error) {
-        throw error;
-    } else {
-        console.log("Conexión con la base de datos establecida correctamente");
+connection.connect((error) => {
+    if (error) {
+        console.log("Error al conectar: " + error);
+        return;
     }
+    console.log("Conexión con la base de datos establecida correctamente");
 });
 
-// Busqueda de usuario en la DB
-function findUser(username, password, callback) {
-    const query = `SELECT * FROM Usuario WHERE usuario = ? AND contraseña = ?`;
-    connection.query(query, [username, password], (err, results) => {
-        if (err) {
-            callback(err, null);
-        } else {
-            callback(null, results);
-        }
-    });
-}
-
-module.exports = { connection, findUser };
-
-// connection.end();
+export default connection;

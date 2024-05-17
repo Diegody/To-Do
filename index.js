@@ -1,99 +1,70 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Configuración del servidor
 const app = express();
+app.set("port", 3000);
+app.listen(app.get("port"));
+console.log("corriendo en el puerto", app.get("port"));
 
-// Configurar Express para servir archivos estáticos desde la carpeta 'public'
-app.use(express.static('public'));
+// DB
+import connection from './controller/connection.js';
 
-app.get('/login', (req, res) => {
-    res.send(`
-            <!DOCTYPE html>
-            <html lang="en">
 
-            <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <!-- Enlace a tu archivo CSS en la carpeta 'public' -->
-            <link rel="stylesheet" href="login.css">
-            <title>Login</title>
-            </head>
+// Configuración
+app.use(express.static(__dirname + "/public"));
 
-            <body>
-            <div class="form">
+// Rutas
+app.get("/", (req, res) => res.sendFile(__dirname + "/view/login.html"));
+app.get("/task", (req, res) => res.sendFile(__dirname + "/view/inicio.html"));
 
-                <ul class="tab-group">
-                <li class="tab active"><a href="#login">Iniciar Sesión</a></li>
-                <li class="tab"><a href="#signup">Registrarse</a></li>
-                </ul>
 
-                <div class="tab-content">
-                <div id="login">
-                    <h1><b>Bienvenido</b></h1>
-                    <form action="/auth" method="post">
-                    <div class="field-wrap" id="username">
-                        <label>
-                        Usuario<span class="req">*</span>
-                        </label>
-                        <input type="text" name="username" required autocomplete="off" />
-                    </div>
+// app.use(express.urlencoded({ extended: false }))
+// app.use(express.json());
+// app.use(express.static('public'));
 
-                    <div class="field-wrap" id="password">
-                        <label>
-                        Contraseña<span class="req">*</span>
-                        </label>
-                        <input type="password" name="password" required autocomplete="off" />
-                    </div>
+// app.get('/login', (req, res) => {
+//     res.send(`
+//     `);
+// });
 
-                    <!-- <p class="forgot"><a href="#">Forgot Password?</a></p> -->
-                    <button class="button button-block" />Iniciar Sesión</button>
-                    </form>
+// app.post('/auth', (req, res) => {
+//     const { username, password } = req.body;
+//     const accessToken = generateAccessToken(username);
 
-                </div>
+//     res.header('authorization', accessToken).json({
+//         message: 'Usuario autenticado',
+//         token: accessToken
+//     });
 
-                <div id="signup">
-                    <h1><b>Registrarse Gratis</b></h1>
-                    <form action="/" method="post">
-                    <div class="field-wrap">
-                        <label>
-                        Usuario<span class="req">*</span>
-                        </label>
-                        <input type="text" required autocomplete="off" />
-                    </div>
+//     const sqlQuery = 'SELECT * FROM Usuario WHERE usuario = ? AND contraseña = ?';
 
-                    <div class="field-wrap">
-                        <label>
-                        Nombre<span class="req">*</span>
-                        </label>
-                        <input type="text" required autocomplete="off" />
-                    </div>
+//     connection.query(sqlQuery, [username], [password], (error, results) => {
+//         if (error) {
+//             console.error('Error al consultar la base de datos:', error);
+//             res.status(500).json({ error: 'Error interno del servidor' });
+//         } else {
+//             if (results.length > 0) {
+//                 const user = results[0];
 
-                    <div class="field-wrap">
-                        <label>
-                        Contraseña<span class="req">*</span>
-                        </label>
-                        <input type="password" required autocomplete="off" />
-                    </div>
+//                 if (user.password === password) {
+//                     res.json({ message: 'Inicio de sesión exitoso', user });
+//                 } else {
+//                     res.status(401).json({ error: 'Credenciales inválidas' });
+//                 }
+//             } else {
+//                 res.status(404).json({ error: 'Usuario no encontrado' });
+//             }
+//         }
+//     });
+// })
 
-                    <!-- <div class="field-wrap">
-                        <label>
-                        Confirmar Contraseña<span class="req">*</span>
-                        </label>
-                        <input type="password" required autocomplete="off" />
-                    </div> -->
+// function generateAccessToken(username) {
+//     return jwt.sign(username, process.env.SECRET, { expiresIn: '5m' });
+// }
 
-                    <button type="submit" class="button button-block" />Registrarse</button>
-                    </form>
-                </div>
-
-                </div><!-- tab-content -->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script src="../model/login.js"></script>
-            </div> <!-- /form -->
-            </body>
-
-            </html>
-    `);
-});
-
-app.listen(3000, () => {
-    console.log('Servidor iniciado');
-});
+// app.listen(3000, () => {
+//     console.log('Servidor iniciado');
+// });

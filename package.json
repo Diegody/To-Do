@@ -2,19 +2,24 @@
   "name": "to-do-list",
   "version": "1.0.0",
   "description": "Interfaz web para el ingreso de tareas a realizar en un formato de lista realizada con HTML, CSS y JS.",
-  "main": "view/index.html",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec node index.js/"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "sass": "^1.76.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
