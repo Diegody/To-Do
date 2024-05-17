@@ -10,7 +10,6 @@
 
 <body>
     <div class="form">
-
         <ul class="tab-group">
             <li class="tab active"><a href="#login">Iniciar Sesión</a></li>
             <li class="tab"><a href="#signup">Registrarse</a></li>
@@ -34,7 +33,7 @@
                         <input type="password" name="password" id="password" required autocomplete="off" />
                     </div>
 
-                    <button type="submit" class="button button-block" />Iniciar Sesión</button>
+                    <button type="submit" class="button button-block">Iniciar Sesión</button>
                 </form>
             </div>
 
@@ -62,11 +61,10 @@
                         <input type="password" name="pass" id="pass" required autocomplete="off" />
                     </div>
 
-                    <button type="submit" class="button button-block" />Registrarse</button>
+                    <button type="submit" class="button button-block">Registrarse</button>
                 </form>
             </div>
         </div>
-
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="login.js"></script>
@@ -125,6 +123,46 @@
                             text: 'Hubo un problema al registrar el usuario',
                         });
                     }
+                }
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+    
+                try {
+                    const response = await fetch('/auth', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+    
+                    const result = await response.json();
+    
+                    if (result.success) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Autenticación Exitosa',
+                            text: result.message,
+                        });
+    
+                        window.location.href = '/task';
+                    } else {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Error de Autenticación',
+                            text: result.message,
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error al autenticar:', error);
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al autenticar el usuario',
+                    });
                 }
             });
         </script>
