@@ -19,30 +19,28 @@
         <div class="tab-content">
             <div id="login">
                 <h1><b>Bienvenido</b></h1>
-                <form action="auth" method="post">
-                    <div class="field-wrap" id="username">
+                <form id="loginForm">
+                    <div class="field-wrap">
                         <label>
                             Usuario<span class="req">*</span>
                         </label>
                         <input type="text" name="username" id="username" required autocomplete="off" />
                     </div>
 
-                    <div class="field-wrap" id="password">
+                    <div class="field-wrap">
                         <label>
                             Contraseña<span class="req">*</span>
                         </label>
                         <input type="password" name="password" id="password" required autocomplete="off" />
                     </div>
 
-                    <!-- <p class="forgot"><a href="#">Forgot Password?</a></p> -->
                     <button type="submit" class="button button-block" />Iniciar Sesión</button>
                 </form>
-
             </div>
 
             <div id="signup">
                 <h1><b>Registrarse Gratis</b></h1>
-                <form action="register" method="post">
+                <form id="registerForm">
                     <div class="field-wrap">
                         <label>
                             Usuario<span class="req">*</span>
@@ -64,21 +62,73 @@
                         <input type="password" name="pass" id="pass" required autocomplete="off" />
                     </div>
 
-                    <!-- <div class="field-wrap">
-                    <label>
-                    Confirmar Contraseña<span class="req">*</span>
-                    </label>
-                    <input type="password" required autocomplete="off" />
-                </div> -->
-
                     <button type="submit" class="button button-block" />Registrarse</button>
                 </form>
             </div>
+        </div>
 
-        </div><!-- tab-content -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="login.js"></script>
-    </div> <!-- /form -->
+        <script>
+            document.getElementById('registerForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const user = document.getElementById('user').value;
+                const name = document.getElementById('name').value;
+                const password = document.getElementById('pass').value;
+
+                const confirmResult = await Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¿Deseas confirmar el registro?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, registrar',
+                    cancelButtonText: 'No, cancelar',
+                    confirmButtonColor: "#24CC63",
+                    cancelButtonColor: "#D33",
+                });
+
+                if (confirmResult.isConfirmed) {
+                    try {
+                        const response = await fetch('/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ user, name, password })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Registro Exitoso',
+                                text: result.message,
+                                confirmButtonText: 'De acuerdo',
+                                confirmButtonColor: "#04AA6D",
+                            });
+                            document.getElementById('registerForm').reset();
+                        } else {
+                            await Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.message + ': ' + result.error,
+                                confirmButtonText: 'De acuerdo',
+                                confirmButtonColor: "#04AA6D",
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error al registrar:', error);
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un problema al registrar el usuario',
+                        });
+                    }
+                }
+            });
+        </script>
+    </div>
 </body>
 
 </html>

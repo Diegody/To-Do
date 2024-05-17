@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS task.Usuario (
   usuario VARCHAR(45) NOT NULL,
   nombre VARCHAR(45) NOT NULL,
   contraseña VARCHAR(45) NOT NULL,
-  creación DATETIME(0) NULL,
+  creacion DATETIME(0) NULL,
   PRIMARY KEY (id_user),
   UNIQUE KEY unique_usuario (usuario)
 );
