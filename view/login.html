@@ -128,26 +128,28 @@
 
             document.getElementById('loginForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
-    
+        
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
-    
+        
                 try {
                     const response = await fetch('/auth', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
                     });
-    
+        
                     const result = await response.json();
-    
+        
+                    console.log('Resultado de autenticación:', result);
+        
                     if (result.success) {
                         await Swal.fire({
                             icon: 'success',
                             title: 'Autenticación Exitosa',
                             text: result.message,
                         });
-    
+        
                         window.location.href = '/task';
                     } else {
                         await Swal.fire({

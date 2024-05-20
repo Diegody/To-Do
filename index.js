@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import bcryptjs from 'bcryptjs';
 import { fileURLToPath } from 'url';
+import session from 'express-session';
+import connection from './controller/connection.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,14 +15,15 @@ app.set("port", 3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.listen(app.get("port"), () => {
-    console.log("Corriendo en el puerto", app.get("port"));
-});
+// Configurar express-session
+app.use(session({
+    secret: 'mysecret', // Cambia esto por una clave secreta real
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Debe ser true si usas HTTPS
+}));
 
-// DB
-import connection from './controller/connection.js';
-
-// Configuración
+// Configuración de rutas estáticas
 app.use(express.static(__dirname + "/public"));
 
 // Rutas
@@ -52,6 +55,8 @@ app.post('/register', async (req, res) => {
 app.post('/auth', async (req, res) => {
     const { username, password } = req.body;
 
+    console.log('Datos recibidos en /auth:', { username, password });
+
     if (username && password) {
         connection.query('SELECT * FROM Usuario WHERE usuario = ?', [username], async (error, results, fields) => {
             if (error) {
@@ -59,13 +64,20 @@ app.post('/auth', async (req, res) => {
                 return res.status(500).json({ success: false, message: 'Error al autenticar el usuario', error: error.message });
             }
 
+            console.log('Resultados de la consulta:', results);
+
             if (results.length > 0) {
                 const user = results[0];
-                const validPassword = await bcryptjs.compare(password, user.contraseña);
-                console.log("Hash: ", password);
-                console.log("Hash: ", user.contraseña);
+                const storedPasswordHash = user.contraseña;
+                console.log('Contraseña almacenada:', storedPasswordHash);
+
+                const validPassword = await bcryptjs.compare(password, storedPasswordHash);
+
+                console.log('Contraseña válida:', validPassword);
 
                 if (validPassword) {
+                    req.session.loggedin = true;
+                    req.session.username = username;
                     return res.status(200).json({ success: true, message: 'Autenticación exitosa' });
                 } else {
                     return res.status(401).json({ success: false, message: 'Contraseña incorrecta' });
@@ -77,4 +89,9 @@ app.post('/auth', async (req, res) => {
     } else {
         return res.status(400).json({ success: false, message: 'Por favor, proporciona un nombre de usuario y una contraseña' });
     }
+});
+
+// Inicia el servidor después de configurar todas las rutas y middlewares
+app.listen(app.get("port"), () => {
+    console.log("Corriendo en el puerto", app.get("port"));
 });
